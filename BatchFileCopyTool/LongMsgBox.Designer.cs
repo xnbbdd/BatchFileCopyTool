@@ -91,6 +91,7 @@
             this.MinimumSize = new System.Drawing.Size(372, 450);
             this.Name = "LongMsgBox";
             this.Text = "确认复制";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LongMsgBox_FormClosed);
             this.Load += new System.EventHandler(this.LongMsgBox_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

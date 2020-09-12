@@ -19,7 +19,7 @@ namespace BatchFileCopyTool
         private HashSet<string> copyFilePathMap;//待拷贝的文件路径map
         private int fileNumCount;//待复制文件数
         private List<int> subDirectoryIndexList;//子目录list索引值
-        private ConfigAccess ca;
+        private ConfigAccess ca;//
 
         public MainForm()
         {
@@ -52,6 +52,26 @@ namespace BatchFileCopyTool
             {
                 UpdatesubDirectoryListBox();
             }
+            if (fileTypeMap.Count > 0) {
+                String fileTypeStr = ca.GetString("HsFileTpye").Trim();
+                if (!fileTypeStr.Equals(""))
+                {
+                    string[] fileTypeArr = fileTypeStr.Split(new char[] { '|' });
+                    for (int i = 0; i < FileTypeListBox.Items.Count; i++)
+                    {
+                        String itemStr = FileTypeListBox.GetItemText(FileTypeListBox.Items[i]);
+                        foreach (var fileType in fileTypeArr)
+                        {
+                            if (itemStr.Equals(fileType)) {
+                                FileTypeListBox.SetItemChecked(i, true);
+                                break;
+                            }
+                        }
+                    }
+                    updateSelectFileTypeList();
+                }
+            }
+           
         }
 
         //选择源目录按钮
@@ -198,30 +218,33 @@ namespace BatchFileCopyTool
             }
             fileNumCount = copyFilePathMap.Count;
             this.FileNumCountLabel.Text = fileNumCount + "";
+
+            saveFileTpye();
         }
+
+        //保存已选文件类型至配置文件中
+        private void saveFileTpye() {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            int countNum = selectedFileTypeMap.Count;
+            int i = 0;
+            foreach (var fileType in selectedFileTypeMap)
+            {
+                sb.Append(fileType);
+                if (i != countNum)
+                {
+                    sb.Append("|");
+                }
+                i++;
+            }
+            ca.SetValue("HsFileTpye", sb.ToString());
+            ca.Save();
+        }
+
 
         //子目录选择list 选择项改变
         private void SubDirectoryListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             updateSelectSubDirectoryList();
-
-            Boolean allCheckedFlag = true;
-            for (int i = 0; i < SubDirectoryListBox.Items.Count; i++)
-            {
-                if (!SubDirectoryListBox.GetItemChecked(i))
-                {
-                    allCheckedFlag = false;
-                    break;
-                }
-            }
-            if (allCheckedFlag)
-            {
-                this.SubDirectorySelectAllCheckBox.Checked = true;
-            }
-            else 
-            {
-                this.SubDirectorySelectAllCheckBox.Checked = false;
-            }
         }
 
         //文件类型选择list 选择项改变
@@ -288,6 +311,7 @@ namespace BatchFileCopyTool
                 tipsText = tipsText + copyFilePath + "\r\n";
             }
 
+            PassData.isOk = false;
             PassData.longMsg = tipsText;
             LongMsgBox longMsgBox = new LongMsgBox();
             longMsgBox.ShowDialog();
@@ -349,6 +373,7 @@ namespace BatchFileCopyTool
                     SubDirectoryListBox.SetItemChecked(i, true);
                 }
             }
+            updateSelectSubDirectoryList();
         }
 
         //文件类型list反选
@@ -365,52 +390,7 @@ namespace BatchFileCopyTool
                     FileTypeListBox.SetItemChecked(i, true);
                 }
             }
-        }
-
-        //全选子目录
-        private void SubDirectorySelectAllCheckBox_Click(object sender, EventArgs e)
-        {
-            if (this.SubDirectorySelectAllCheckBox.Checked)
-            {
-                for (int j = 0; j < this.SubDirectoryListBox.Items.Count; j++)
-                    this.SubDirectoryListBox.SetItemChecked(j, true);
-            }
-            else
-            {
-                for (int j = 0; j < this.SubDirectoryListBox.Items.Count; j++)
-                    this.SubDirectoryListBox.SetItemChecked(j, false);
-            }
-
-            updateSelectSubDirectoryList();
-        }
-
-        //全选文件类型
-        private void FileTypeSelectAllCheckBox_Click(object sender, EventArgs e)
-        {
-            if (this.FileTypeSelectAllCheckBox.Checked)
-            {
-                for (int j = 0; j < this.FileTypeListBox.Items.Count; j++)
-                    this.FileTypeListBox.SetItemChecked(j, true);
-            }
-            else
-            {
-                for (int j = 0; j < this.FileTypeListBox.Items.Count; j++)
-                    this.FileTypeListBox.SetItemChecked(j, false);
-            }
-
             updateSelectFileTypeList();
-        }
-
-        
-        private void SubDirectorySelectAllCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        
-        private void FileTypeSelectAllCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            
         }
     }
 }

@@ -23,7 +23,12 @@ namespace BatchFileCopyTool
 
         private void CanlceButton_Click(object sender, EventArgs e)
         {
+            PassData.isOk = false;
             this.Close();
+        }
+
+        private void LongMsgBox_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        {
         }
     }
 }

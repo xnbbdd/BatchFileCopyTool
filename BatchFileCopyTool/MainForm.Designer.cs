@@ -41,8 +41,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.FileTypeListBox = new System.Windows.Forms.CheckedListBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.SubDirectorySelectAllCheckBox = new System.Windows.Forms.CheckBox();
-            this.FileTypeSelectAllCheckBox = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.FileNumCountLabel = new System.Windows.Forms.Label();
             this.StartCopyButton = new MetroFramework.Controls.MetroButton();
@@ -214,30 +212,6 @@
             this.label6.TabIndex = 14;
             this.label6.Text = "选择需要复制的文件类型";
             // 
-            // SubDirectorySelectAllCheckBox
-            // 
-            this.SubDirectorySelectAllCheckBox.AutoSize = true;
-            this.SubDirectorySelectAllCheckBox.Location = new System.Drawing.Point(265, 200);
-            this.SubDirectorySelectAllCheckBox.Name = "SubDirectorySelectAllCheckBox";
-            this.SubDirectorySelectAllCheckBox.Size = new System.Drawing.Size(48, 16);
-            this.SubDirectorySelectAllCheckBox.TabIndex = 15;
-            this.SubDirectorySelectAllCheckBox.Text = "全选";
-            this.SubDirectorySelectAllCheckBox.UseVisualStyleBackColor = true;
-            this.SubDirectorySelectAllCheckBox.CheckedChanged += new System.EventHandler(this.SubDirectorySelectAllCheckBox_CheckedChanged);
-            this.SubDirectorySelectAllCheckBox.Click += new System.EventHandler(this.SubDirectorySelectAllCheckBox_Click);
-            // 
-            // FileTypeSelectAllCheckBox
-            // 
-            this.FileTypeSelectAllCheckBox.AutoSize = true;
-            this.FileTypeSelectAllCheckBox.Location = new System.Drawing.Point(672, 200);
-            this.FileTypeSelectAllCheckBox.Name = "FileTypeSelectAllCheckBox";
-            this.FileTypeSelectAllCheckBox.Size = new System.Drawing.Size(48, 16);
-            this.FileTypeSelectAllCheckBox.TabIndex = 16;
-            this.FileTypeSelectAllCheckBox.Text = "全选";
-            this.FileTypeSelectAllCheckBox.UseVisualStyleBackColor = true;
-            this.FileTypeSelectAllCheckBox.CheckedChanged += new System.EventHandler(this.FileTypeSelectAllCheckBox_CheckedChanged);
-            this.FileTypeSelectAllCheckBox.Click += new System.EventHandler(this.FileTypeSelectAllCheckBox_Click);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -292,11 +266,11 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label9.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.label9.Location = new System.Drawing.Point(700, 580);
+            this.label9.Location = new System.Drawing.Point(600, 580);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(70, 14);
+            this.label9.Size = new System.Drawing.Size(168, 14);
             this.label9.TabIndex = 22;
-            this.label9.Text = "by xnbbdd";
+            this.label9.Text = "V1.0 20200912 by xnbbdd";
             // 
             // label8
             // 
@@ -384,8 +358,6 @@
             this.Controls.Add(this.StartCopyButton);
             this.Controls.Add(this.FileNumCountLabel);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.FileTypeSelectAllCheckBox);
-            this.Controls.Add(this.SubDirectorySelectAllCheckBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.FileTypeListBox);
             this.Controls.Add(this.label5);
@@ -422,8 +394,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckedListBox FileTypeListBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox SubDirectorySelectAllCheckBox;
-        private System.Windows.Forms.CheckBox FileTypeSelectAllCheckBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label FileNumCountLabel;
         private MetroFramework.Controls.MetroButton StartCopyButton;
