@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BatchFileCopyTool
@@ -44,6 +45,7 @@ namespace BatchFileCopyTool
             ca = new ConfigAccess("config.ini");
             selectSourcePath = ca.GetString("selectSourcePath");
             selectTargetPath = ca.GetString("selectTargetPath");
+            this.IncludeKeywordTextBox.Text = ca.GetString("HsKeyword");
 
             //初始化界面
             this.SelectSourcePathTextBox.Text = selectSourcePath;
@@ -52,6 +54,7 @@ namespace BatchFileCopyTool
             {
                 UpdatesubDirectoryListBox();
             }
+            //初始化文件类型勾选
             if (fileTypeMap.Count > 0) {
                 String fileTypeStr = ca.GetString("HsFileTpye").Trim();
                 if (!fileTypeStr.Equals(""))
@@ -71,7 +74,27 @@ namespace BatchFileCopyTool
                     updateSelectFileTypeList();
                 }
             }
-           
+            //初始化子目录勾选
+            if (subDirectoryList.Count > 0) {
+                String subDirectoryStr = ca.GetString("HsSubDirectory").Trim();
+                if (!subDirectoryStr.Equals(""))
+                {
+                    string[] subDirectoryArr = subDirectoryStr.Split(new char[] { '|' });
+                    for (int i = 0; i < SubDirectoryListBox.Items.Count; i++)
+                    {
+                        String itemStr = SubDirectoryListBox.GetItemText(SubDirectoryListBox.Items[i]);
+                        foreach (var subDirectory in subDirectoryArr)
+                        {
+                            if (itemStr.Equals(subDirectory))
+                            {
+                                SubDirectoryListBox.SetItemChecked(i, true);
+                                break;
+                            }
+                        }
+                    }
+                    updateSelectSubDirectoryList();
+                }
+            }
         }
 
         //选择源目录按钮
@@ -232,19 +255,37 @@ namespace BatchFileCopyTool
             }
             fileNumCount = copyFilePathMap.Count;
             this.FileNumCountLabel.Text = fileNumCount + "";
+        }
 
-            saveFileTpye();
+        //保存已选子目录至配置文件中
+        private void saveSubDirectory() {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            int countNum = subDirectoryIndexList.Count;
+            int i = 0;
+            foreach (var index in subDirectoryIndexList)
+            {
+                string subDirectory = subDirectoryList[index].Substring(subDirectoryList[index].LastIndexOf('\\') + 1);
+                sb.Append(subDirectory);
+                if (i + 1 != countNum)
+                {
+                    sb.Append("|");
+                }
+                i++;
+            }
+            ca.SetValue("HsSubDirectory", sb.ToString());
+            ca.Save();
         }
 
         //保存已选文件类型至配置文件中
-        private void saveFileTpye() {
+        private void saveFileTpye()
+        {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             int countNum = selectedFileTypeMap.Count;
             int i = 0;
             foreach (var fileType in selectedFileTypeMap)
             {
                 sb.Append(fileType);
-                if (i != countNum)
+                if (i + 1 != countNum)
                 {
                     sb.Append("|");
                 }
@@ -254,6 +295,13 @@ namespace BatchFileCopyTool
             ca.Save();
         }
 
+        //保存搜索关键字至配置文件中
+        private void saveKeyword()
+        {
+            string keyword = this.IncludeKeywordTextBox.Text;
+            ca.SetValue("HsKeyword", keyword);
+            ca.Save();
+        }
 
         //子目录选择list 选择项改变
         private void SubDirectoryListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -304,6 +352,9 @@ namespace BatchFileCopyTool
             this.CopyProgressLabel.Text = "";
             this.CopyProgressBar.Value = 0;
             updateFileNumCount();
+
+            selectSourcePath = this.SelectSourcePathTextBox.Text;
+            selectTargetPath = this.SelectTargetPathTextBox.Text;
             if (selectSourcePath.Trim().Equals(""))
             {
                 MessageBox.Show("未选择源目录", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -314,6 +365,33 @@ namespace BatchFileCopyTool
                 MessageBox.Show("未选择目标目录", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            //检查目标目录是否合法
+            try
+            {
+                DirectoryInfo root = new DirectoryInfo(selectTargetPath);
+                Regex regex = new Regex(@"^([a-zA-Z]:\\)?[^\/\:\*\?\""\<\>\|\,]*$");
+                Match m = regex.Match(selectTargetPath);
+                if (!m.Success)
+                {
+                    MessageBox.Show("非法的目标目录路径，请重新选择或输入！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (!selectTargetPath.Contains(":\\")) {
+                    MessageBox.Show("非法的目标目录路径，请重新选择或输入！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+            }
+            catch (Exception exc) {
+                MessageBox.Show("非法的目标目录路径，请重新选择或输入！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            //如果目标目录为空则创建
+            if (!Directory.Exists(selectTargetPath))
+            { 
+                Directory.CreateDirectory(selectTargetPath);
+            }
+
             if (copyFilePathMap.Count == 0)
             {
                 MessageBox.Show("复制文件数为0", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -334,6 +412,14 @@ namespace BatchFileCopyTool
             {
                 CopyFileHandler();
             }
+
+            //复制成功保存配置信息
+            ca.SetValue("selectTargetPath", selectTargetPath);
+            ca.SetValue("selectSourcePath", selectSourcePath);
+            ca.Save();
+            saveSubDirectory();
+            saveFileTpye();
+            saveKeyword();
         }
 
         //复制文件处理

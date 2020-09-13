@@ -270,7 +270,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(196, 14);
             this.label9.TabIndex = 22;
-            this.label9.Text = "V1.0.0.1 20200913 by xnbbdd";
+            this.label9.Text = "V1.0.0.2 20200914 by xnbbdd";
             // 
             // label8
             // 
