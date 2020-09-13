@@ -77,51 +77,65 @@ namespace BatchFileCopyTool
         //选择源目录按钮
         private void SelectSourcePathButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "请选择源目录";
-            dialog.SelectedPath = selectSourcePath;
-            if (dialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                //重新初始化
-                this.SubDirectoryListBox.Items.Clear();
-                this.FileTypeListBox.Items.Clear();
-                fileTypeMap = new HashSet<string>();
-                copyFilePathMap = new HashSet<string>();
-                subDirectoryList = new List<string>();
-                selectedSubDirectoryMap = new HashSet<string>();
-                selectedFileTypeMap = new HashSet<string>();
-                subDirectoryIndexList = new List<int>();
-                filePathList = new List<List<string>>();
-                fileNameList = new List<List<string>>();
-                this.CopyProgressLabel.Text = "";
-                this.CopyProgressBar.Value = 0;
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                dialog.Description = "请选择源目录";
+                dialog.SelectedPath = this.SelectSourcePathTextBox.Text.Trim();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    //重新初始化
+                    this.SubDirectoryListBox.Items.Clear();
+                    this.FileTypeListBox.Items.Clear();
+                    fileTypeMap = new HashSet<string>();
+                    copyFilePathMap = new HashSet<string>();
+                    subDirectoryList = new List<string>();
+                    selectedSubDirectoryMap = new HashSet<string>();
+                    selectedFileTypeMap = new HashSet<string>();
+                    subDirectoryIndexList = new List<int>();
+                    filePathList = new List<List<string>>();
+                    fileNameList = new List<List<string>>();
+                    this.CopyProgressLabel.Text = "";
+                    this.CopyProgressBar.Value = 0;
 
-                selectSourcePath = dialog.SelectedPath;
-                //写入配置文件
-                ca.SetValue("selectSourcePath", selectSourcePath);
-                ca.Save();
+                    selectSourcePath = dialog.SelectedPath;
+                    //写入配置文件
+                    ca.SetValue("selectSourcePath", selectSourcePath);
+                    ca.Save();
 
-                this.SelectSourcePathTextBox.Text = selectSourcePath;
+                    this.SelectSourcePathTextBox.Text = selectSourcePath;
 
-                UpdatesubDirectoryListBox();
+                    UpdatesubDirectoryListBox();
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("可能原因:输入路径非有效路径\n" + exc, "发生错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //选择目标目录按钮
         private void SelectTargetPathButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "请选择目标目录";
-            dialog.SelectedPath = selectTargetPath;
-            if (dialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                selectTargetPath = dialog.SelectedPath;
-                //写入配置文件
-                ca.SetValue("selectTargetPath", selectTargetPath);
-                ca.Save();
-                this.SelectTargetPathTextBox.Text = selectTargetPath;
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                dialog.Description = "请选择目标目录";
+                dialog.SelectedPath = this.SelectTargetPathTextBox.Text.Trim();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    selectTargetPath = dialog.SelectedPath;
+                    //写入配置文件
+                    ca.SetValue("selectTargetPath", selectTargetPath);
+                    ca.Save();
+                    this.SelectTargetPathTextBox.Text = selectTargetPath;
+                }
             }
-        }
+            catch (Exception exc)
+            {
+                MessageBox.Show("可能原因:输入路径非有效路径\n" + exc, "发生错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+}
 
         /*
          * 获得指定路径下所有目录名

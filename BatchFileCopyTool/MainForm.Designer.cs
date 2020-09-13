@@ -266,11 +266,11 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label9.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.label9.Location = new System.Drawing.Point(600, 580);
+            this.label9.Location = new System.Drawing.Point(574, 580);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(168, 14);
+            this.label9.Size = new System.Drawing.Size(196, 14);
             this.label9.TabIndex = 22;
-            this.label9.Text = "V1.0 20200912 by xnbbdd";
+            this.label9.Text = "V1.0.0.1 20200913 by xnbbdd";
             // 
             // label8
             // 
